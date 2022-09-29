@@ -1,0 +1,4 @@
+name = "MRIBMapping"
+uuid = "0f3cb38c-a0e3-4e86-acca-3c7d84ac7265"
+authors = ["Felix Horger <felix.horger@kcl.ac.uk>"]
+version = "0.1.0"
