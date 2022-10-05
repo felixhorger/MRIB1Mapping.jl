@@ -1,19 +1,23 @@
 
-module MRIB1Mapping
+module MRIBMapping
 	
-	function afi(recons::AbstractArray{<: Complex, N}, TRs::NTuple{2, Real}) where N
+	function afi(recons::AbstractArray{<: Complex, N}, TR_ratio::Real, α_nominal::Real) where N
+		@assert TR_ratio > 1
 		# Get dimensions
-		shape = size(recon)
+		shape = size(recons)
 		spatial_shape = shape[1:N-1]
-		num_TR = shape[N]
 		# Iterate spatial locations
-		n = TRs[2] / TRs[1]
-		α = Array{Float64, N}(undef, spatial_shape)
-		for X in CartesianIndices(recon)
-			r = recon[X, 1] / recon[X, 2]
-			α[X] = acos( (r * n - 1) / (n - r) )
+		relB1 = Array{Float64, N-1}(undef, spatial_shape)
+		for X in CartesianIndices(spatial_shape)
+			signal_ratio = sqrt(abs2(recons[X, 2]) / abs2(recons[X, 1]))
+			cosα = (signal_ratio * TR_ratio - 1) / (TR_ratio - signal_ratio)
+			if abs2(cosα) < 1
+				relB1[X] = acos(cosα) / α_nominal
+			else
+				relB1[X] = 0
+			end
 		end
-		return α
+		return relB1
 	end
 end
 
