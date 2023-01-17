@@ -23,7 +23,15 @@ module MRIBMapping
 	end
 
 
-	function phase2Δω(ϕ::AbstractArray{<: Real, N}, TEs::AbstractVector{<: Real}) where N
+	# TODO: Lin2020, but include the coil combination from https://github.com/MagneticResonanceImaging/MRIFieldmaps.jl
+	# Maybe need to use full image not only phases
+	# TODO: instead of computing phase1, phase2, ... and then computing the difference, it is better to
+	# compute angle(signal1 * conj(signal2)), see Robinson2011
+	# TODO: Channelwise like in Robinson2011
+	"""
+		Note the units are rad/[TE]
+	"""
+	function phases2Δω(ϕ::AbstractArray{<: Real, N}, TEs::AbstractVector{<: Real}) where N
 		@assert size(ϕ, N) == 3
 		@assert all(x -> x > 0.0, diff(TEs))
 		shape = size(ϕ)[1:N-1]
