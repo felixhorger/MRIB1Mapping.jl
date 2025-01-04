@@ -38,7 +38,7 @@ module MRIBMapping
 		spatial_indices = CartesianIndices(shape)
 		# Get window in which no aliasing occurs
 		ΔTEs = @views TEs[2:3] .- TEs[1]
-		Δω_aliasing = 2π / ΔTEs[1]
+		Δω_aliasing = 2π / ΔTEs[1] # TODO: not minimum ...? plus, a factor of two missing? Nyquist!
 		# Remove phase from first TE
 		ϕ = @views rem2pi.(ϕ[spatial_indices, 2:3] .- ϕ[spatial_indices, 1], RoundNearest)
 		# Note: Use remainder, because we don't expect these to lie outside the window Δω_aliasing
